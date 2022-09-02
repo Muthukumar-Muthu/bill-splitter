@@ -1,0 +1,17 @@
+.add-expense {
+  margin: 1em;
+}
+.add-expense > button {
+  margin-bottom: 1em;
+  padding: 0;
+  padding-left: 0.5em;
+  background-color: #0099cc;
+}
+.add-expense > button a {
+  padding: 0.5em;
+  background-color: #0099cc;
+}
+.add-expense > div {
+  max-width: 500px;
+  margin-inline: auto;
+}/*# sourceMappingURL=style.css.map */

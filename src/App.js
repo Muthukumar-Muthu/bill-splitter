@@ -1,23 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import NavBar from "./components/Navbar";
+import CreateGroup from "./routes/create-group";
+import { Home } from "./routes/home";
+import MyGroups from "./routes/my-groups";
+import Group from "./routes/group";
+import AddExpense from "./routes/add-expense";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/create-group" element={<CreateGroup />} />
+        <Route path="/my-groups" element={<MyGroups />} />
+        <Route path="/my-groups/:gid" element={<Group />} />
+        <Route path="/my-groups/:gid/add-Expense" element={<AddExpense />} />
+      </Routes>
     </div>
   );
 }

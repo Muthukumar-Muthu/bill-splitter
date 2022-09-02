@@ -1,0 +1,7 @@
+.members li {
+  list-style-type: decimal;
+  list-style-position: inside;
+  background-color: lightblue;
+  padding: 0.5em 0.75em;
+  border-radius: 10px;
+}/*# sourceMappingURL=style.css.map */

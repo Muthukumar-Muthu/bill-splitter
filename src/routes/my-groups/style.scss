@@ -1,0 +1,24 @@
+ul.group-list {
+  width: 90%;
+  margin: 1em auto;
+  list-style-type: none;
+  font-size: large;
+  li {
+    margin-block: 1em;
+  }
+  a {
+    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5em;
+    background-color: rgba(0, 136, 170, 0.4);
+    border-radius: 10px;
+    :last-child {
+      margin-left: auto;
+    }
+    > * {
+      margin-inline: 1em;
+    }
+  }
+}

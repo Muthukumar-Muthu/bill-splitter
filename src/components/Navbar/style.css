@@ -1,0 +1,25 @@
+nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  background-color: #24252b;
+  color: white;
+  padding-block: 0.75em;
+  z-index: 2;
+}
+nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+}
+nav ul a {
+  margin-inline: 0.5em;
+  padding: 0.5em;
+  border-radius: 10px;
+}
+
+@media only screen and (max-width: 375px) {
+  nav a {
+    margin-inline: 0.1em;
+  }
+}/*# sourceMappingURL=style.css.map */

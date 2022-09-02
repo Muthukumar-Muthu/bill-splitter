@@ -1,0 +1,30 @@
+form.create-group {
+  display: grid;
+  place-items: center;
+}
+form.create-group h1 {
+  font-size: xx-large;
+  color: rgba(0, 170, 255, 0.99);
+}
+form.create-group * {
+  margin-block: 0.5em;
+}
+form.create-group .add-members {
+  width: 100%;
+  display: flex;
+  padding-inline: 0.5em;
+  align-items: center;
+}
+form.create-group .add-members > * {
+  margin-inline: 0.2em;
+}
+form.create-group .button-group {
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+}/*# sourceMappingURL=style.css.map */

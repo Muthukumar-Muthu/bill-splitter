@@ -1,0 +1,24 @@
+ul.group-list {
+  width: 90%;
+  margin: 1em auto;
+  list-style-type: none;
+  font-size: large;
+}
+ul.group-list li {
+  margin-block: 1em;
+}
+ul.group-list a {
+  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5em;
+  background-color: rgba(0, 136, 170, 0.4);
+  border-radius: 10px;
+}
+ul.group-list a :last-child {
+  margin-left: auto;
+}
+ul.group-list a > * {
+  margin-inline: 1em;
+}/*# sourceMappingURL=style.css.map */
