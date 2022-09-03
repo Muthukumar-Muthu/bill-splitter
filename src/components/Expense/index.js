@@ -24,7 +24,7 @@ const Expense = ({ group }) => {
   function submitHandler(e) {
     e.preventDefault();
     const transaction = { ...formData, amount: parseInt(formData.amount) };
-    console.log(`Submitted the form`, transaction);
+
     addTransaction(transaction, group.gid)
       .then(() => {
         navigate(`/my-groups/${group.gid}`);

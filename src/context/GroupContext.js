@@ -9,14 +9,15 @@ import {
 } from "firebase/firestore";
 import { Spinner } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "../fbConfig";
-import { id as userId, name as userName } from "../constant";
+import { db, getUserId, getUserName } from "../fbConfig";
+
 import { useState, createContext, useEffect } from "react";
 const GroupContext = createContext();
 
 function GroupProvider({ children }) {
   const { Provider } = GroupContext;
-
+  const userId = getUserId();
+  const userName = getUserName();
   const [groups, setGroups] = useState([]);
   const [transactions, setTransactions] = useState({});
   const [user, setUser] = useState(null);

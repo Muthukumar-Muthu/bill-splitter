@@ -1,4 +1,9 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Button } from "@chakra-ui/react";
+import {
+  GoogleAuthProvider,
+  signInAnonymously,
+  signInWithPopup,
+} from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../fbConfig";
@@ -8,6 +13,7 @@ const SignIn = () => {
   return (
     <div className="sign-in">
       <h2>Sign In</h2>
+      <AnonymousButton />
       <GoogleButton />
       {error}
     </div>
@@ -15,6 +21,14 @@ const SignIn = () => {
 };
 export default SignIn;
 
+function AnonymousButton() {
+  const navigate = useNavigate();
+  async function clickHandler() {
+    await signInAnonymously(auth);
+    navigate("/");
+  }
+  return <Button onClick={clickHandler}>Sign In Anonymously</Button>;
+}
 function GoogleButton() {
   const navigate = useNavigate();
 

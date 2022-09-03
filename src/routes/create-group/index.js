@@ -2,14 +2,14 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Input, Button, IconButton, ButtonGroup } from "@chakra-ui/react";
 
 import { useState } from "react";
-import { id, name } from "../../constant";
+
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import Members from "../../components/Members";
 import "./style.css";
 
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../fbConfig";
+import { db, getUserId, getUserName } from "../../fbConfig";
 const CreateGroup = () => {
   const [title, setTitle] = useState("");
   const [member, setMember] = useState("");
@@ -27,7 +27,7 @@ const CreateGroup = () => {
   function submitHandler(e) {
     e.preventDefault();
     if (title.trim() === "" || members.length < 1) return;
-    console.log("submitting form");
+
     setLoading(true);
     createGroup(title, members)
       .then((gid) => {
@@ -91,6 +91,8 @@ const CreateGroup = () => {
 export default CreateGroup;
 
 async function createGroup(title = "", members = []) {
+  const id = getUserId();
+  const name = getUserName();
   if (!title) {
     console.error("Invalid data provided for group creation");
     return;
@@ -110,7 +112,8 @@ async function createGroup(title = "", members = []) {
       groups: arrayUnion(gid),
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    error;
     return gid;
   }
 

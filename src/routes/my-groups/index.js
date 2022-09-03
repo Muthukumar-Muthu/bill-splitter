@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { Avatar } from "@chakra-ui/react";
 import { useGroups } from "../../hooks/useGroups";
 import "./style.css";
+import { useContext } from "react";
+import { GroupContext } from "../../context/GroupContext";
 const MyGroups = () => {
-  const { groups } = useGroups();
+  const { groups } = useContext(GroupContext);
   return (
     <ul className="group-list">
       {groups.length !== 0 ? (

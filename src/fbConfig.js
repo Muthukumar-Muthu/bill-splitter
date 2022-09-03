@@ -21,11 +21,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const db = getFirestore(app);
+
 function getUserId() {
-  return auth.currentUser.uid;
+  return auth.currentUser?.uid || "8727-sdfsf";
 }
 
 function getUserName() {
-  return auth.currentUser.displayName;
+  return auth.currentUser?.displayName || "Dummy UserName";
 }
 export { app, db, auth, getUserId, getUserName };

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import Transactions from "../../components/Transactions";
 import "./style.css";
-import { id } from "../../constant";
+
 import { doc, getDoc } from "firebase/firestore";
 import { db, getUserId, getUserName } from "../../fbConfig";
 import { Spinner } from "@chakra-ui/react";
@@ -25,6 +25,7 @@ const Group = () => {
   const [groupWithTransaction, setGroupWithTransaction] = useState({
     loading: true,
   });
+  const id = getUserId();
   const [selectedUser, setselectedUser] = useState(id);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Group = () => {
             name="selectedUser"
             required
             onChange={(e) => {
-              if (!value) setselectedUser(id);
+              if (!e.target.value) setselectedUser(id);
               else setselectedUser(e.target.value);
             }}
             value={selectedUser}
