@@ -1,0 +1,33 @@
+.piechat-warpper {
+  max-width: 350px;
+  display: grid;
+  place-items: center;
+  > * {
+    margin-top: 2em;
+  }
+}
+h1 {
+  font-size: 2em;
+}
+.home {
+  margin-top: 1em;
+  max-width: 700px;
+  width: 90%;
+  display: grid;
+  place-items: center;
+  margin-inline: auto;
+  min-height: 50vh;
+  .dot {
+    margin-right: 0.5em;
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .legend {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+  }
+}

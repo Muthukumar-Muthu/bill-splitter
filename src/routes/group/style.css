@@ -56,4 +56,8 @@
   font-size: 10px;
   text-align: center;
   margin-inline: auto;
+}
+.group-page .selected-user {
+  margin-inline: auto;
+  max-width: 350px;
 }/*# sourceMappingURL=style.css.map */

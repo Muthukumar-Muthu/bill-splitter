@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useGroups } from "../../hooks/useGroups";
-import { Button, Heading } from "@chakra-ui/react";
+import { Button, Heading, Select } from "@chakra-ui/react";
 import {
   Table,
   Thead,
@@ -15,9 +15,9 @@ import {
 } from "@chakra-ui/react";
 import Transactions from "../../components/Transactions";
 import "./style.css";
-
+import { id } from "../../constant";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../fbConfig";
+import { db, getUserId, getUserName } from "../../fbConfig";
 import { Spinner } from "@chakra-ui/react";
 
 const Group = () => {
@@ -25,6 +25,7 @@ const Group = () => {
   const [groupWithTransaction, setGroupWithTransaction] = useState({
     loading: true,
   });
+  const [selectedUser, setselectedUser] = useState(id);
 
   useEffect(() => {
     getGroup(gid).then((data) =>
@@ -39,29 +40,58 @@ const Group = () => {
       </Button>
       <div className="overview">
         <h1>Overview</h1>
+        <div className="selected-user">
+          <Select
+            placeholder="Select the person"
+            name="selectedUser"
+            required
+            onChange={(e) => {
+              if (!value) setselectedUser(id);
+              else setselectedUser(e.target.value);
+            }}
+            value={selectedUser}
+          >
+            {groupWithTransaction.groupData.members.map((member) => (
+              <option key={"member" + member.id} value={member.id}>
+                {member.name}
+              </option>
+            ))}
+          </Select>
+        </div>
         <TableContainer>
           <Table variant="simple">
-            <TableCaption>
-              * If owed money is negative, then others have to give money to you
+            <TableCaption style={{ marginTop: "0.5em" }}>
+              <Tr style={{ fontSize: "1.5em" }}>
+                Showing Data for
+                {" " +
+                  getUser(selectedUser, groupWithTransaction.groupData.members)
+                    .name}
+              </Tr>
+              <Tr style={{ color: "lightgrey" }}>
+                * If owed money is negative, then others have to give money to
+                you
+              </Tr>
             </TableCaption>
             <Tbody>
               <Tr>
                 <Th>The cost of the group:</Th>
-                <Td>{getTotalCostOfTheGroup(groupWithTransaction)}</Td>
+                <Td>
+                  {getTotalCostOfTheGroup(groupWithTransaction, selectedUser)}
+                </Td>
               </Tr>
               <Tr>
                 <Th>It cost you:</Th>
-                <Td>{getCostToUser(groupWithTransaction)}</Td>
+                <Td>{getCostToUser(groupWithTransaction, selectedUser)}</Td>
               </Tr>
               <Tr>
                 <Th>You've paid:</Th>
-                <Td>{getAmountPaid(groupWithTransaction)}</Td>
+                <Td>{getAmountPaid(groupWithTransaction, selectedUser)}</Td>
               </Tr>
               <Tr>
                 <Th className="owed">
                   <span>You are owed * :</span>
                 </Th>
-                <Td>{getOwnedAmount(groupWithTransaction)}</Td>
+                <Td>{getOwnedAmount(groupWithTransaction, selectedUser)}</Td>
               </Tr>
             </Tbody>
             <Tfoot>
@@ -84,6 +114,9 @@ const Group = () => {
   );
 };
 
+function getUser(id, members) {
+  return members.find((m) => m.id === id);
+}
 async function getGroup(gid) {
   const group = await getDoc(doc(db, "groups", gid));
   const groupData = group.data();
@@ -109,31 +142,29 @@ function getTotalCostOfTheGroup(groupWithTransaction) {
   return parseInt(totalCost);
 }
 
-function getCostToUser(groupWithTransaction) {
+function getCostToUser(groupWithTransaction, userId) {
   return (
-    getTotalCostOfTheGroup(groupWithTransaction) /
+    getTotalCostOfTheGroup(groupWithTransaction, userId) /
     groupWithTransaction.groupData.members.length
   ).toFixed(1);
 }
 
-function getAmountPaid(groupWithTransaction) {
+function getAmountPaid(groupWithTransaction, userId) {
   const { transactions } = groupWithTransaction;
   let totalAmountGiven = 0;
   transactions.forEach((transaction) => {
-    if (transaction.payerId === getCurrentUserId()) {
+    if (transaction.payerId === userId) {
       totalAmountGiven += transaction.amount;
     }
   });
   return parseInt(totalAmountGiven);
 }
 
-function getOwnedAmount(groupWithTransaction) {
+function getOwnedAmount(groupWithTransaction, userId) {
   return (
-    getCostToUser(groupWithTransaction) - getAmountPaid(groupWithTransaction)
+    getCostToUser(groupWithTransaction, userId) -
+    getAmountPaid(groupWithTransaction, userId)
   ).toFixed(1);
 }
 
-function getCurrentUserId(id) {
-  return "Gc2HdfWtYB6Qrge5QZIO";
-}
 export default Group;

@@ -21,5 +21,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const db = getFirestore(app);
+function getUserId() {
+  return auth.currentUser.uid;
+}
 
-export { app, db, auth };
+function getUserName() {
+  return auth.currentUser.displayName;
+}
+export { app, db, auth, getUserId, getUserName };
