@@ -61,17 +61,24 @@ const Group = () => {
         </div>
         <TableContainer>
           <Table variant="simple">
-            <TableCaption style={{ marginTop: "0.5em" }}>
-              <Tr style={{ fontSize: "1.5em" }}>
+            <TableCaption
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: "0.5em",
+              }}
+            >
+              <span style={{ fontSize: "1.5em" }}>
                 Showing Data for
                 {" " +
                   getUser(selectedUser, groupWithTransaction.groupData.members)
                     .name}
-              </Tr>
-              <Tr style={{ color: "lightgrey" }}>
+              </span>
+
+              <span style={{ color: "lightgrey" }}>
                 * If owed money is negative, then others have to give money to
                 you
-              </Tr>
+              </span>
             </TableCaption>
             <Tbody>
               <Tr>

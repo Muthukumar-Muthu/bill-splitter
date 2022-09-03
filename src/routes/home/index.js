@@ -13,13 +13,10 @@ export const Home = () => {
     amountDetails.totalExpenseToUser,
     amountDetails.totalAmountOwed,
   ];
-  let transactionsWithGroups = null;
+
   useEffect(() => {
     getAllTransactions(id)
-      .then((data) => {
-        transactionsWithGroups = data;
-        totalExpenseToUser(data);
-      })
+      .then(totalExpenseToUser)
       .then(totalAmountGiven)
       .then((value) => {
         const { totalAmountGiven, totalExpenseToUser } = value;
@@ -117,7 +114,7 @@ async function getAllTransactions(userId) {
 
   const user = await getDoc(doc(db, "users", userId));
   const groups = user.data().groups;
-
+  if (groups.length === 0) throw new Error("No groups to process");
   const transactionPromises = groups.map(async (groupId) => {
     const group = await getDoc(doc(db, "groups", groupId));
     const { transactionIds } = group.data();
