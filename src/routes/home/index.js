@@ -30,7 +30,7 @@ export const Home = () => {
       })
       .catch((err) => {
         console.log(err);
-        setAmountDetails((p) => ({ ...p, loading: false }));
+        setAmountDetails((p) => ({ ...p, loading: false, error: err }));
       });
   }, []);
 
@@ -115,7 +115,7 @@ async function getAllTransactions(userId) {
 
   const user = await getDoc(doc(db, "users", userId));
   const groups = user.data().groups;
-  if (groups.length === 0) throw new Error("No groups to process");
+  if (!groups) throw new Error("No groups to process");
   const transactionPromises = groups.map(async (groupId) => {
     const group = await getDoc(doc(db, "groups", groupId));
     const { transactionIds } = group.data();
