@@ -154,7 +154,7 @@ async function totalExpenseToUser(transactionsWithGroups) {
 }
 
 async function totalAmountGiven(obj) {
-  console.log(obj);
+  // console.log(obj);
   const userId = getUserId();
   const { transactionsWithGroups } = obj;
   const totalAmount = transactionsWithGroups.reduce(
