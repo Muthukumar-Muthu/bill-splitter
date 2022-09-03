@@ -23,10 +23,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 function getUserId() {
-  return auth.currentUser?.uid || "8727-sdfsf";
+  return auth.currentUser.uid;
 }
 
 function getUserName() {
-  return auth.currentUser?.displayName || "Dummy UserName";
+  return auth.currentUser.displayName;
 }
 export { app, db, auth, getUserId, getUserName };
