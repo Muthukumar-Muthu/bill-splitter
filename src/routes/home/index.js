@@ -28,9 +28,10 @@ export const Home = () => {
           totalAmountOwed,
         }));
       })
-      .catch((err) =>
-        setAmountDetails((p) => ({ ...p, loading: false, error: err.message }))
-      );
+      .catch((err) => {
+        console.log(err);
+        setAmountDetails((p) => ({ ...p, loading: false }));
+      });
   }, []);
 
   return (
