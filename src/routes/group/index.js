@@ -18,14 +18,14 @@ import "./style.css";
 
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../fbConfig";
-//
+import { Spinner } from "@chakra-ui/react";
 
 const Group = () => {
   const { gid } = useParams();
   const [groupWithTransaction, setGroupWithTransaction] = useState({
     loading: true,
   });
-  console.log(groupWithTransaction);
+
   useEffect(() => {
     getGroup(gid).then((data) =>
       setGroupWithTransaction((p) => ({ ...p, loading: false, ...data }))
@@ -41,6 +41,9 @@ const Group = () => {
         <h1>Overview</h1>
         <TableContainer>
           <Table variant="simple">
+            <TableCaption>
+              * If owed money is negative, then others have to give money to you
+            </TableCaption>
             <Tbody>
               <Tr>
                 <Th>The cost of the group:</Th>
@@ -55,17 +58,29 @@ const Group = () => {
                 <Td>{getAmountPaid(groupWithTransaction)}</Td>
               </Tr>
               <Tr>
-                <Th>You are owed:</Th>
+                <Th className="owed">
+                  <span>You are owed * :</span>
+                </Th>
                 <Td>{getOwnedAmount(groupWithTransaction)}</Td>
               </Tr>
             </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th className="disclamer"></Th>
+              </Tr>
+            </Tfoot>
           </Table>
         </TableContainer>
-        <Transactions transactions={groupWithTransaction.transactions} />
+        <Transactions
+          members={groupWithTransaction.groupData.members}
+          transactions={groupWithTransaction.transactions}
+        />
       </div>
     </section>
   ) : (
-    "loading"
+    <div style={{ display: "grid", placeItems: "center", marginTop: "5em" }}>
+      <Spinner size="xl" />
+    </div>
   );
 };
 
@@ -78,13 +93,13 @@ async function getGroup(gid) {
     return transaction.data();
   });
   const resolvedTransactions = await Promise.all(transactionPromise);
-  console.log({ groupData, transactions: resolvedTransactions });
+
   return { groupData, transactions: resolvedTransactions };
 }
 
 function getTotalCostOfTheGroup(groupWithTransaction) {
   const { transactions } = groupWithTransaction;
-  console.log(transactions);
+
   let totalCost = 0;
 
   transactions.forEach((transaction) => {

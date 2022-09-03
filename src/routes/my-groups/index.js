@@ -12,7 +12,9 @@ const MyGroups = () => {
             <Link to={`/my-groups/${group.gid}`} key={group.gid}>
               <Avatar size="lg" name={group.title} />
               <span>{group.title}</span>
-              <span>Total Members : {group.members.length}</span>
+              <span style={{ marginRight: "5px" }}>
+                Members: {group.members.length}
+              </span>
             </Link>
           </li>
         ))

@@ -10,10 +10,13 @@ import {
 } from "@chakra-ui/react";
 import "./style.css";
 
-const Transactions = ({ transactions }) => {
-  console.log(transactions);
+const Transactions = ({ transactions, members }) => {
   const transactionsRow = transactions.map((transaction) => (
-    <Transaction key={transaction.transId} transaction={transaction} />
+    <Transaction
+      key={transaction.transId}
+      transaction={transaction}
+      members={members}
+    />
   ));
 
   return (
@@ -41,14 +44,14 @@ const Transactions = ({ transactions }) => {
 };
 export default Transactions;
 
-function getUser(id) {
-  return `${id}+name`;
+function getUser(id, members) {
+  return members.find((member) => member.id === id).name;
 }
 
-function Transaction({ transaction }) {
+function Transaction({ transaction, members }) {
   return (
     <Tr>
-      <Td>{getUser(transaction.payerId)}</Td>
+      <Td>{getUser(transaction.payerId, members)}</Td>
       <Td>{transaction.reason}</Td>
       <Td>{transaction.amount}</Td>
       <Td>{transaction.date}</Td>

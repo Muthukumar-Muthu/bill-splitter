@@ -1,4 +1,5 @@
 import {
+  addDoc,
   arrayUnion,
   doc,
   getDoc,
@@ -6,42 +7,44 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { Spinner } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../fbConfig";
-
-const { useState, createContext, useEffect } = require("react");
+import { id as userId, name as userName } from "../constant";
+import { useState, createContext, useEffect } from "react";
 const GroupContext = createContext();
-
-const userId = "Gc2HdfWtYB6Qrge5QZIO";
 
 function GroupProvider({ children }) {
   const { Provider } = GroupContext;
 
   const [groups, setGroups] = useState([]);
   const [transactions, setTransactions] = useState({});
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     connectToUserDoc();
   }, []);
 
   async function connectToUserDoc() {
-    console.log("connecttouser");
     try {
       const docRef = doc(db, "users", userId);
       onSnapshot(docRef, (snapshot) => {
         if (snapshot.exists()) {
           const userFs = snapshot.data();
           setUser(userFs);
-          console.log(userFs);
           connectToGroups(userFs.groups);
-        }
+        } else
+          setDoc(doc(db, "users", userId), {
+            id: userId,
+            name: userName,
+            groups: [],
+          });
       });
     } catch (er) {
       console.error(er);
     }
   }
   async function connectToGroups(groupIds) {
-    console.log("connecting to groups", groupIds);
     try {
       const groupsPromise = groupIds.map(async (groupId) => {
         const group = await getDoc(doc(db, "groups", groupId));
@@ -52,41 +55,12 @@ function GroupProvider({ children }) {
       const resolvedGroups = await Promise.all(groupsPromise);
       setGroups(resolvedGroups);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
   async function getGroup(gid) {
     return groups.find((group) => group.gid === gid);
-  }
-
-  async function createGroup(title = "", members = []) {
-    if (!title) {
-      console.error("Invalid data provided for group creation");
-      return;
-    }
-
-    const gid = uuidv4();
-    const group = {
-      title,
-      members: [...members, user],
-      gid,
-      transactionIds: [],
-    };
-
-    try {
-      await setDoc(doc(db, "groups", gid), group);
-      await updateDoc(doc(db, "users", userId), {
-        groups: arrayUnion(gid),
-      });
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-    // setGroups((p) => {
-    //   return [...p, group];
-    // });
-    return gid;
   }
 
   async function addTransaction(transaction, gid) {
@@ -103,11 +77,14 @@ function GroupProvider({ children }) {
     );
     setTransactions((p) => ({ ...p, [transId]: transaction }));
   }
-
+  if (!user)
+    return (
+      <div style={{ display: "grid", placeItems: "center", marginTop: "5em" }}>
+        <Spinner size="xl" />
+      </div>
+    );
   return (
-    <Provider
-      value={{ groups, createGroup, getGroup, addTransaction, transactions }}
-    >
+    <Provider value={{ groups, getGroup, addTransaction, transactions }}>
       {children}
     </Provider>
   );

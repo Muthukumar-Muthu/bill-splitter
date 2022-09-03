@@ -1,19 +1,22 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Input, Button, IconButton, ButtonGroup } from "@chakra-ui/react";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { id, name } from "../../constant";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import Members from "../../components/Members";
 import "./style.css";
 
-import { GroupContext } from "../../context/GroupContext";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../fbConfig";
 const CreateGroup = () => {
   const [title, setTitle] = useState("");
   const [member, setMember] = useState("");
   const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { createGroup } = useContext(GroupContext);
+
   function addMember() {
     if (member.trim() === "") return;
     setMembers((p) => {
@@ -25,15 +28,19 @@ const CreateGroup = () => {
     e.preventDefault();
     if (title.trim() === "" || members.length < 1) return;
     console.log("submitting form");
+    setLoading(true);
     createGroup(title, members)
       .then((gid) => {
         if (!gid) throw new Error("Gid is undefined");
         navigate(`/my-groups/${gid}`);
       })
-      .catch((err) => alert(JSON.stringify(err)));
+      .catch((err) => {
+        console.error(err);
+        alert(JSON.stringify(err));
+      });
   }
   return (
-    <form className="center-element create-group" onSubmit={submitHandler}>
+    <form className="create-group" onSubmit={submitHandler}>
       <h1>Create a new Group</h1>
       <div>
         <label htmlFor="group-title">Group Name</label>
@@ -54,9 +61,6 @@ const CreateGroup = () => {
             onChange={(e) => setMember(e.target.value)}
             value={member}
             autoComplete="off"
-            // onKeyUp={(e) => {
-            //   if (e.code === "Enter") addMember();
-            // }}
           />
           <IconButton
             style={{ backgroundColor: "#00B5D8" }}
@@ -69,12 +73,46 @@ const CreateGroup = () => {
         <Members members={members} />
       </div>
       <ButtonGroup className="button-group">
-        <Button type="submit" colorScheme={"cyan"}>
+        <Button type="submit" colorScheme={"cyan"} loadingText={loading}>
           Create
         </Button>
-        <Button colorScheme={"red"}>Cancel</Button>
+        <Button
+          onClick={() => {
+            navigate(`/my-groups/`);
+          }}
+          colorScheme={"red"}
+        >
+          Cancel
+        </Button>
       </ButtonGroup>
     </form>
   );
 };
 export default CreateGroup;
+
+async function createGroup(title = "", members = []) {
+  if (!title) {
+    console.error("Invalid data provided for group creation");
+    return;
+  }
+
+  const gid = uuidv4();
+  const group = {
+    title,
+    members: [...members, { id, name }],
+    gid,
+    transactionIds: [],
+  };
+
+  try {
+    await setDoc(doc(db, "groups", gid), group);
+    await updateDoc(doc(db, "users", id), {
+      groups: arrayUnion(gid),
+    });
+  } catch (error) {
+    console.log(error);
+    return gid;
+  }
+
+  return gid;
+}

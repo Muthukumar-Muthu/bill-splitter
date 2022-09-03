@@ -51,6 +51,8 @@ const Expense = ({ group }) => {
           value={formData?.reason}
           size={"md"}
           required
+          autoComplete="off"
+          onChange={() => {}}
         />
       </div>
       <div>
@@ -62,12 +64,21 @@ const Expense = ({ group }) => {
           value={formData?.amount}
           type="number"
           isRequired={true}
+          autoComplete="off"
+          onChange={() => {}}
         />
       </div>
 
       <div>
         <label htmlFor="when">When?</label>
-        <Input id="when" type="date" name="date" size={"md"} required />
+        <Input
+          id="when"
+          type="date"
+          name="date"
+          size={"md"}
+          required
+          onChange={() => {}}
+        />
       </div>
       <div className="button-group">
         <Button type="submit" colorScheme={"blue"}>

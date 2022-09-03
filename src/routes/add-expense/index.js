@@ -6,7 +6,7 @@ import "./style.css";
 import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../fbConfig";
-
+import { Spinner } from "@chakra-ui/react";
 const AddExpense = () => {
   const { gid } = useParams();
 
@@ -29,7 +29,9 @@ const AddExpense = () => {
       <Expense group={group} />
     </div>
   ) : (
-    "loading"
+    <div style={{ display: "grid", placeItems: "center", marginTop: "5em" }}>
+      <Spinner size="xl" />
+    </div>
   );
 };
 export default AddExpense;
@@ -37,6 +39,5 @@ export default AddExpense;
 async function getGroup(gid) {
   const group = await getDoc(doc(db, "groups", gid));
   const groupData = group.data();
-  console.log(groupData);
   return groupData;
 }

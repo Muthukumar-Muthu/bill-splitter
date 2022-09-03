@@ -1,6 +1,11 @@
 form.create-group {
   display: grid;
   place-items: center;
+  max-width: 700px;
+  margin-inline: auto;
+  input {
+    min-width: 300px;
+  }
   h1 {
     font-size: xx-large;
     color: rgba(0, 170, 255, 0.99);
