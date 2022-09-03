@@ -6,7 +6,7 @@ import { Home } from "./routes/home";
 import MyGroups from "./routes/my-groups";
 import Group from "./routes/group";
 import AddExpense from "./routes/add-expense";
-import { useContext } from "react";
+
 import PrivateRoutes from "./routes/private-routes/PrivateRoutes";
 import SignIn from "./components/SignIn";
 function App() {

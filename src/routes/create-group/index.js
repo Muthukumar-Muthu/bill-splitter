@@ -112,8 +112,13 @@ async function createGroup(title = "", members = []) {
       groups: arrayUnion(gid),
     });
   } catch (error) {
+    await setDoc(doc(db, "users", id), {
+      name,
+      id,
+      groups: [gid],
+    });
     console.error(error);
-    error;
+
     return gid;
   }
 
